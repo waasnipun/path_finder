@@ -57,14 +57,14 @@ class Landing extends React.Component{
         var newBoard = this.state.grid;
         for(var i=0;i<this.boardSize;i++){
             for(var j=0;j<this.boardSize;j++){
-                if(newBoard[i][j]!="wall"){
+                if(newBoard[i][j]!=="wall"){
                     newBoard[i][j] = "+";
                 }
             }
         }
         newBoard[0][0] = "path";
         newBoard[this.boardSize-1][this.boardSize-1] = "path";
-        this.setState({"grid":newBoard});
+        this.setState({"grid":newBoard,'stop':false});
     }
 
     fillTiles(i,j,type){
@@ -86,7 +86,7 @@ class Landing extends React.Component{
             await sleep(25);
         }
         if(isPathAvaiable){
-            for(var i =0;i<path.length;i++){
+            for(i =0;i<path.length;i++){
                 if(this.state.stop){
                     break;
                 }
@@ -108,7 +108,7 @@ class Landing extends React.Component{
             await sleep(25);
         }
         if(isPathAvaiable){
-            for(var i =0;i<path.length;i++){
+            for(i =0;i<path.length;i++){
                 if(this.state.stop){
                     break;
                 }
