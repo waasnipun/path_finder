@@ -1,5 +1,3 @@
-var startX = 0;
-var startY = 0;
 var moves = [[-1,0],[0,-1],[1,0],[0,1]];
 
 function isCellAvailable(nextX,nextY,len,grid,visited){
@@ -11,7 +9,7 @@ function isCellAvailable(nextX,nextY,len,grid,visited){
     }
 }
 
-export function BFS(grid){
+export function BFS(grid,startX,startY){
     var len = grid.length;
     var finished = false;
     var flood = [];
@@ -30,7 +28,7 @@ export function BFS(grid){
     var queue = [];
     var shortestPath = [];
     queue.push({x:startX,y:startY});
-
+    visited[startX][startY] = 1;
     while(queue.length!==0){
         var cell = queue.shift()
         flood.push(cell);
@@ -54,18 +52,18 @@ export function BFS(grid){
             queue = [];
             var countX = len-1;
             var countY = len-1;
-            while(countX!==0 || countY!==0){
+            while(countX!==startX || countY!==startY){
                 var predesorCell = predesor[countX][countY];
                 console.log(predesorCell);
                 shortestPath.push(predesorCell);
                 countX = predesorCell.x;
                 countY = predesorCell.y;
             }
-            shortestPath.push({x:0,y:0});
         }
     }
 
-
+    flood.shift();
+    flood.pop();
     const object = {flood:flood,isPathAvaiable:finished,path:shortestPath};
     return object;
 }

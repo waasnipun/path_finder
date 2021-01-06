@@ -20,6 +20,8 @@ class Landing extends React.Component{
 
     boardSize = 20;
     grid_value = 0;
+    startX = 10;
+    startY = 10;
 
     constructor(props){
         super(props);
@@ -35,14 +37,14 @@ class Landing extends React.Component{
         this.handleBFS = this.handleBFS.bind(this);
         this.handleDFS = this.handleDFS.bind(this);
 
-        this.state.grid[0][0] = "path";
+        this.state.grid[this.startX][this.startY] = "path";
         this.state.grid[this.boardSize-1][this.boardSize-1] = "path";
     }
     
     handleReset(){
         this.grid_value = 0;
         var newBoard = Array(this.boardSize).fill().map(x=>Array(this.boardSize).fill("+"));
-        newBoard[0][0] = "path";
+        newBoard[this.startX][this.startY] = "path";
         newBoard[this.boardSize-1][this.boardSize-1] = "path";
         this.setState({'stop':false,'grid':newBoard});
     }
@@ -62,7 +64,7 @@ class Landing extends React.Component{
                 }
             }
         }
-        newBoard[0][0] = "path";
+        newBoard[this.startX][this.startY] = "path";
         newBoard[this.boardSize-1][this.boardSize-1] = "path";
         this.setState({"grid":newBoard,'stop':false});
     }
@@ -76,7 +78,7 @@ class Landing extends React.Component{
 
     async handleBFS(){
         const board = this.state.grid;
-        const {flood,isPathAvaiable,path} = BFS(board);
+        const {flood,isPathAvaiable,path} = BFS(board,this.startX,this.startY);
         console.log(path);
         for(var i =0;i<flood.length;i++){
             if(this.state.stop){
@@ -98,14 +100,14 @@ class Landing extends React.Component{
 
     async handleDFS(){
         const board = this.state.grid;
-        const {flood,isPathAvaiable,path} = DFS(board);
+        const {flood,isPathAvaiable,path} = DFS(board,this.startX,this.startY);
         console.log(path);
         for(var i =0;i<flood.length;i++){
             if(this.state.stop){
                 break;
             }
             this.fillTiles(flood[i].x,flood[i].y,"fill");
-            await sleep(25);
+            await sleep(5);
         }
         if(isPathAvaiable){
             for(i =0;i<path.length;i++){
@@ -113,7 +115,7 @@ class Landing extends React.Component{
                     break;
                 }
                 this.fillTiles(path[i].x,path[i].y,"path");
-                await sleep(25);
+                await sleep(5);
             }
         }      
     }
@@ -133,42 +135,57 @@ class Landing extends React.Component{
             return (
                 <tr key={"row_"+i}>
                     {row.map((col,j)=>{
-                        const color = board[i][j] ==="+" ? '#48C9B0' : board[i][j] === "wall" ? '#5D6D7E': board[i][j] === "path" ? "#DE3163":"#BB8FCE";
+                        const color = board[i][j] ==="+" ? '#F5B7B1' : board[i][j] === "wall" ? '#5D6D7E': board[i][j] === "path" ? "#A93226  ":"#F4D03F";
                         this.grid_value++;
-                        return (
-                            <Tile handleClick={()=>this.fillTiles(i,j,"wall")} color={color} key={i+"_"+j} number={this.grid_value}/>
-                        )
+                        if(board[i][j]==="wall"){
+                            return (
+                                <Tile handleClick={()=>this.fillTiles(i,j,"+")} color={color} key={i+"_"+j} number={this.grid_value}/>
+                            )
+                        }
+                        else{
+                            return (
+                                <Tile handleClick={()=>this.fillTiles(i,j,"wall")} color={color} key={i+"_"+j} number={this.grid_value}/>
+                            )
+                        }
                     })}
                 </tr>
             )
         })
         return(
-            <Container>
-                <br></br><br></br>
-                <h1 className="title">Path Finder</h1>
-                <br></br><br></br>
-                <Row>
-                    <Col sm={4}>
-                        <h2 className="title">Settings</h2>
-                        <br></br><br></br>
-                        <Button size="lg" block variant="warning" onClick={this.handleReset}>Reset</Button>{' '}
-                        <Button size="lg" block variant="primary" onClick={this.handleClear}>Clear</Button>{' '}
-                        <Button size="lg" block variant="danger" onClick={this.handleStop}>Stop</Button>{' '}
-                        <Button size="lg" block variant="dark" onClick={this.handleBFS}>BFS</Button>{' '}
-                        <Button size="lg" block variant="dark" onClick={this.handleDFS}>DFS</Button>{' '}
-                    </Col>
-                    <Col sm={8}>
-                        <div style={{margin: 'auto'}}>
-                            <table cellSpacing="0" style={style}>
-                                <tbody>
-                                    {createBoard}
-                                </tbody>
-                            </table>
-                        </div>
-                    </Col>
-                    <br></br>
-                </Row>
-            </Container>
+            <>
+                <Container>
+                    <br></br><br></br>
+                    <h1 className="title">Path Finder</h1>
+                    <br></br><br></br>
+                    <Row>
+                        <Col sm={2}>
+                            <h2 className="subtitle">Settings</h2>
+                            <br></br><br></br>
+                            <Button className="font-family-change" size="lg" block variant="warning" onClick={this.handleReset}>Reset</Button>{' '}
+                            <Button className="font-family-change" size="lg" block variant="primary" onClick={this.handleClear}>Clear</Button>{' '}
+                            <Button className="font-family-change" size="lg" block variant="danger" onClick={this.handleStop}>Stop</Button>{' '}
+                            <Button className="font-family-change" size="lg" block variant="dark" onClick={this.handleBFS}>BFS</Button>{' '}
+                            <Button className="font-family-change" size="lg" block variant="dark" onClick={this.handleDFS}>DFS</Button>{' '}
+                        </Col>
+                        <Col sm={9}>
+                            <div style={{margin: 'auto'}}>
+                                <table cellSpacing="0" style={style}>
+                                    <tbody>
+                                        {createBoard}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </Col>
+                        <br></br>
+                    </Row>
+                </Container>
+                <br></br>
+                <div
+                    className="text-center p-3"
+                    style={{ backgroundColor: "rgba(0, 0, 0, 0.9)" ,color:"#fff"}}>
+                    Designed and Built by Nipun Waas
+                </div>
+            </>
         );
     }   
 }

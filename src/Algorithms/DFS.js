@@ -1,5 +1,3 @@
-var startX = 0;
-var startY = 0;
 var moves = [[-1,0],[0,-1],[1,0],[0,1]];
 var visited = new Array(20);
 var predesor = new Array(20);
@@ -43,26 +41,25 @@ function DFS_implement(x,y,len,grid){
         }
     }
 }
-export function DFS(grid){
+export function DFS(grid,startX,startY){
     var len = grid.length;
     var shortestPath = [];
-
+    visited[startX][startY] = 1;
     DFS_implement(startX,startY,len,grid);
 
     if(finished){
         var countX = len-1;
         var countY = len-1;
-        while(countX!==0 || countY!==0){
+        while(countX!==startX || countY!==startY){
             var predesorCell = predesor[countX][countY];
             console.log(predesorCell);
             shortestPath.push(predesorCell);
             countX = predesorCell.x;
             countY = predesorCell.y;
         }
-        shortestPath.push({x:0,y:0});
     }
 
-
+    flood.shift();
     const object = {flood:flood,isPathAvaiable:finished,path:shortestPath};
     return object;
 }

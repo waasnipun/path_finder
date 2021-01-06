@@ -11,10 +11,10 @@ export class Tile extends React.Component{
           width:'40px',
           height:'40px',
           backgroundColor:this.props.color,
-          border:".5px solid #fff"
+          border:".5px solid #fff",
         }}
         onClick={this.props.handleClick}>
-          {this.props.number}
+          {/* {this.props.number} */}
       </td>
     )
   }

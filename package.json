@@ -13,6 +13,7 @@
     "react-css-grid": "^2.0.0-0",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
+    "react-table-drag-select": "^0.3.1",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
