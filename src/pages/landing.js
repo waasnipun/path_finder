@@ -107,7 +107,7 @@ class Landing extends React.Component{
                 break;
             }
             this.fillTiles(flood[i].x,flood[i].y,"fill");
-            await sleep(5);
+            await sleep(25);
         }
         if(isPathAvaiable){
             for(i =0;i<path.length;i++){
@@ -115,7 +115,7 @@ class Landing extends React.Component{
                     break;
                 }
                 this.fillTiles(path[i].x,path[i].y,"path");
-                await sleep(5);
+                await sleep(25);
             }
         }      
     }
