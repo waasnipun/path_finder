@@ -37,15 +37,15 @@ class Landing extends React.Component{
         this.handleBFS = this.handleBFS.bind(this);
         this.handleDFS = this.handleDFS.bind(this);
 
-        this.state.grid[this.startX][this.startY] = "path";
-        this.state.grid[this.boardSize-1][this.boardSize-1] = "path";
+        this.state.grid[this.startX][this.startY] = "start_end";
+        this.state.grid[this.boardSize-1][this.boardSize-1] = "start_end";
     }
     
     handleReset(){
         this.grid_value = 0;
         var newBoard = Array(this.boardSize).fill().map(x=>Array(this.boardSize).fill("+"));
-        newBoard[this.startX][this.startY] = "path";
-        newBoard[this.boardSize-1][this.boardSize-1] = "path";
+        newBoard[this.startX][this.startY] = "start_end";
+        newBoard[this.boardSize-1][this.boardSize-1] = "start_end";
         this.setState({'stop':false,'grid':newBoard});
     }
 
@@ -64,15 +64,15 @@ class Landing extends React.Component{
                 }
             }
         }
-        newBoard[this.startX][this.startY] = "path";
-        newBoard[this.boardSize-1][this.boardSize-1] = "path";
+        newBoard[this.startX][this.startY] = "start_end";
+        newBoard[this.boardSize-1][this.boardSize-1] = "start_end";
         this.setState({"grid":newBoard,'stop':false});
     }
 
     fillTiles(i,j,type){
         const board = this.state.grid;
         board[i][j] = type;
-        this.grid_value = 0 ;
+        this.grid_value = 0;
         this.setState({'grid':board});
     }
 
@@ -88,7 +88,7 @@ class Landing extends React.Component{
             await sleep(25);
         }
         if(isPathAvaiable){
-            for(i =0;i<path.length;i++){
+            for(i =0;i<path.length-1;i++){
                 if(this.state.stop){
                     break;
                 }
@@ -110,7 +110,7 @@ class Landing extends React.Component{
             await sleep(25);
         }
         if(isPathAvaiable){
-            for(i =0;i<path.length;i++){
+            for(i =0;i<path.length-1;i++){
                 if(this.state.stop){
                     break;
                 }
@@ -135,7 +135,7 @@ class Landing extends React.Component{
             return (
                 <tr key={"row_"+i}>
                     {row.map((col,j)=>{
-                        const color = board[i][j] ==="+" ? '#F5B7B1' : board[i][j] === "wall" ? '#5D6D7E': board[i][j] === "path" ? "#A93226  ":"#F4D03F";
+                        const color = board[i][j] ==="+" ? '#F5B7B1' : board[i][j] === "wall" ? '#5D6D7E': board[i][j] === "path" ? "#A93226":board[i][j] === "start_end"?'#000000':"#F4D03F";
                         this.grid_value++;
                         if(board[i][j]==="wall"){
                             return (
