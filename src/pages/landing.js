@@ -15,13 +15,15 @@ import {
 //Algorithms
 import { BFS } from "../Algorithms/BFS";
 import { DFS } from "../Algorithms/DFS";
+import { Dijkstra } from "../Algorithms/Dijkstra";
 
 class Landing extends React.Component {
 
     boardSize = 20;
     grid_value = 0;
-    startX = 10;
-    startY = 10;
+    startX = 0;
+    startY = 0;
+    valueGrid = [[]];
 
     constructor(props) {
         super(props);
@@ -36,9 +38,13 @@ class Landing extends React.Component {
         this.fillTiles = this.fillTiles.bind(this);
         this.handleBFS = this.handleBFS.bind(this);
         this.handleDFS = this.handleDFS.bind(this);
+        this.generateRandomMaze = this.generateRandomMaze.bind(this);
+        this.handleDijkstra = this.handleDijkstra.bind(this);
 
         this.state.grid[this.startX][this.startY] = "start_end";
         this.state.grid[this.boardSize - 1][this.boardSize - 1] = "start_end";
+
+        this.grid_value = 0;
     }
 
     handleReset() {
@@ -78,7 +84,7 @@ class Landing extends React.Component {
         this.setState({ 'grid': board });
     }
 
-    generateRandomMaze = () => {
+    generateRandomMaze() {
         this.grid_value = 0;
         var board = Array(this.boardSize).fill().map(x => Array(this.boardSize).fill("+"));
         for (var i = 0; i < this.boardSize; i++) {
@@ -102,7 +108,30 @@ class Landing extends React.Component {
     async handleBFS() {
         const board = this.state.grid;
         const { flood, isPathAvaiable, path } = BFS(board, this.startX, this.startY);
-        console.log(path);
+        console.log(path.length);
+        for (var i = 0; i < flood.length; i++) {
+            if (this.state.stop) {
+                break;
+            }
+            this.fillTiles(flood[i].x, flood[i].y, "fill");
+            await sleep(25);
+        }
+        if (isPathAvaiable) {
+            for (i = 0; i < path.length; i++) {
+                this.fillTiles(path[i].x, path[i].y, "path");
+                await sleep(25);
+                if (this.state.stop) {
+                    break;
+                }
+            }
+        }
+    }
+
+    async handleDijkstra() {
+        const board = this.state.grid;
+        const { flood, isPathAvaiable, path, valueGrid } = Dijkstra(board, this.startX, this.startY);
+        this.valueGrid = valueGrid;
+        console.log(path.length);
         for (var i = 0; i < flood.length; i++) {
             if (this.state.stop) {
                 break;
@@ -124,7 +153,7 @@ class Landing extends React.Component {
     async handleDFS() {
         const board = this.state.grid;
         const { flood, isPathAvaiable, path } = DFS(board, this.startX, this.startY);
-        console.log(path);
+        console.log(flood.length);
         for (var i = 0; i < flood.length; i++) {
             if (this.state.stop) {
                 break;
@@ -160,6 +189,9 @@ class Landing extends React.Component {
                     {row.map((col, j) => {
                         const color = board[i][j] === "+" ? '#F5B7B1' : board[i][j] === "wall" ? '#5D6D7E' : board[i][j] === "path" ? "#A93226" : board[i][j] === "start_end" ? '#000000' : "#F4D03F";
                         this.grid_value++;
+                        if(this.valueGrid[0].length!==0){
+                            this.grid_value = this.valueGrid[i][j];
+                        }
                         if (board[i][j] === "wall") {
                             return (
                                 <Tile handleClick={() => this.fillTiles(i, j, "+")} color={color} key={i + "_" + j} number={this.grid_value} />
@@ -188,7 +220,7 @@ class Landing extends React.Component {
                             <Button className="font-family-change" size="lg" block variant="danger" onClick={this.handleStop}>Stop</Button>{' '}
                             <Button className="font-family-change" size="lg" block variant="dark" onClick={this.handleBFS}>BFS</Button>{' '}
                             <Button className="font-family-change" size="lg" block variant="dark" onClick={this.handleDFS}>DFS</Button>{' '}
-                            <Button className="font-family-change" size="lg" block variant="dark" onClick={this.handleDFS}>Dijkstra</Button>{' '}
+                            <Button className="font-family-change" size="lg" block variant="dark" onClick={this.handleDijkstra}>Dijkstra</Button>{' '}
                             <Button className="font-family-change" size="lg" block variant="dark" onClick={this.handleDFS}>A*</Button>{' '}
                             <br></br>
                             <h2 className='subtitle'>Maze</h2>

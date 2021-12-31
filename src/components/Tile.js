@@ -44,7 +44,7 @@ export class Tile extends React.Component {
         onMouseEnter={this.toggleHover}
         onMouseLeave={this.toggleHover}
         onClick={this.props.handleClick}>
-        {this.props.number}
+        {this.props.number===Number.POSITIVE_INFINITY?" ":this.props.number}
       </td>
     )
   }
