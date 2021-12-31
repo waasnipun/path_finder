@@ -63,7 +63,7 @@ export function BFS(grid,startX,startY){
     }
 
     flood.shift();
-    flood.pop();
+    // flood.pop();
     const object = {flood:flood,isPathAvaiable:finished,path:shortestPath};
     return object;
 }
