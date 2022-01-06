@@ -1,4 +1,4 @@
-var moves = [[-1,0],[-1,-1],[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1]];
+var moves = [[-1,0],[0,-1],[1,0],[0,1]];
 
 function isCellAvailable(nextX,nextY,len,grid,visited){
     if(0<=nextX && 0<=nextY && nextY<len && nextX<len && grid[nextX][nextY]!=="wall" && visited[nextX][nextY]===0){

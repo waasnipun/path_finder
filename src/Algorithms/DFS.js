@@ -1,4 +1,4 @@
-var moves = [[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1],[0,1]];
+var moves = [[-1,0],[0,-1],[1,0],[0,1]];
 var visited = new Array(20);
 var predesor = new Array(20);
 var finished = false;
